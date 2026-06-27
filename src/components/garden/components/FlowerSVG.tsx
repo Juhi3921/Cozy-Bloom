@@ -43,7 +43,7 @@ export function FlowerSVG({ kind, stage, size = 64 }: FlowerSVGProps) {
     );
   }
 
-  // Stage 3: Bloom
+ 
   const petals = Array.from({ length: info.petals });
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" className="anim-sway">

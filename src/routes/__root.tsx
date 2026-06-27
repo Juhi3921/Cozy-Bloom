@@ -44,7 +44,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Something went wrong on our end. You can try refreshing or go back to home page.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -75,7 +75,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "OneKey Garden — A cozy one-key gardening game" },
       { name: "description", content: "Grow a magical garden using only the Spacebar. Plant flowers, attract wildlife, and unlock magical creatures in this cozy one-key indie game." },
-      { name: "author", content: "Hack Club OneKey" },
+      { name: "author", content: "OneKey" },
       { property: "og:title", content: "OneKey Garden" },
       { property: "og:description", content: "A cozy magical garden playable with only the Spacebar." },
       { property: "og:type", content: "website" },

@@ -23,7 +23,7 @@ export function GardenJournal({ save, onClose }: GardenJournalProps) {
         className="glass-panel rounded-3xl p-6 max-w-2xl w-[92%] max-h-[80vh] overflow-y-auto"
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-(--font-display) text-2xl">🌷 Garden Journal</h2>
+          <h2 className="font-(--font-display) text-2xl">Garden Journal</h2>
           <button
             onClick={onClose}
             className="text-xs opacity-70 hover:opacity-100 transition-opacity px-2 py-1 rounded bg-white/20 cursor-pointer"

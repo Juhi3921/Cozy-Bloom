@@ -663,7 +663,7 @@ export function GardenGame() {
               <h1 className="text-4xl font-bold mb-2 bg-linear-to-br from-pink-600 to-purple-600 bg-clip-text text-transparent">
                 OneKey Garden
               </h1>
-              <p className="opacity-80 mb-6 text-sm">A cozy spacebar gardening hackathon project.</p>
+              <p className="opacity-80 mb-6 text-sm">A cozy spacebar gardening .</p>
               <div className="glass-panel rounded-2xl p-4 text-xs text-left mx-auto inline-block space-y-1">
                 <div className="font-semibold mb-1">🎹 spacebar only controls:</div>
                 <div className="flex justify-between gap-4">

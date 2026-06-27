@@ -5,7 +5,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "OneKey Garden — A cozy one-key gardening game" },
-      { name: "description", content: "Grow a magical garden using only the Spacebar. Cozy pixel-art indie game for the Hack Club OneKey challenge." },
+      { name: "description", content: "Grow a magical garden using only the Spacebar." },
     ],
   }),
   component: () => <GardenGame />,

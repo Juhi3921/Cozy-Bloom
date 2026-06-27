@@ -17,7 +17,7 @@ export function Stars() {
       {stars.map((s, i) => (
         <div
           key={i}
-          className="absolute bg-white rounded-full anim-twinkle"
+          className="absolute bg-gray-300 rounded-full anim-twinkle"
           style={{
             left: `${s.x}%`,
             top: `${s.y}%`,

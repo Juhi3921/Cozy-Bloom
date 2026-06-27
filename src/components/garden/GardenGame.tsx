@@ -660,13 +660,6 @@ export function GardenGame() {
             className="absolute inset-0 z-50 flex items-center justify-center bg-linear-to-br from-pink-100 via-purple-100 to-sky-100"
           >
             <div className="text-center max-w-md px-6">
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
-                className="text-6xl mb-4"
-              >
-                🌸✨
-              </motion.div>
               <h1 className="text-4xl font-bold mb-2 bg-linear-to-br from-pink-600 to-purple-600 bg-clip-text text-transparent">
                 OneKey Garden
               </h1>

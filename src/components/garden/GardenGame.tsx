@@ -530,7 +530,7 @@ export function GardenGame() {
         </div>
       </div>
 
-      {/* Critters Layer */}
+     
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {critters.map((c) => (
           <motion.div

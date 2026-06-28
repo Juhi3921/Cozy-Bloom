@@ -2,11 +2,7 @@
 
 A tiny browser garden game you can play with just your spacebar.
 
-## What is it?
-
 You grow flowers. That's basically it.
-
-Press space to plant, double-tap to switch tools, hold to water everything at once.
 
 ## Controls
 

@@ -2,10 +2,6 @@
 
 A tiny browser garden game you can play with just your spacebar.
 
-Built for the [Hack Club OneKey Challenge](https://hackclub.com) — one key, one game.
-
----
-
 ## What is it?
 
 You grow flowers. That's basically it.
@@ -44,20 +40,8 @@ npm install
 npm run dev
 ```
 
-Opens on `http://localhost:5173`.
-
 ## Stack
 
 React, TanStack Start, Framer Motion, Tailwind CSS, Web Audio API.
 No database. Game state lives in `localStorage`.
 
-## What I'd add with more time
-
-- More flower species (cut it down to 5 for the time limit)
-- Seasons that change the visual theme
-- Sound effects beyond the basic oscillator chimes
-- Mobile / touch support
-
----
-
-Made in ~5 hours · Hack Club OneKey Challenge · June 2026

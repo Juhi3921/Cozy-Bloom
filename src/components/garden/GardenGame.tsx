@@ -145,7 +145,7 @@ export function GardenGame() {
     return () => clearInterval(interval);
   }, []);
 
-  // Wildlife spawning loop
+
   useEffect(() => {
     const spawnTimer = setInterval(() => {
       setCritters((prev) => {

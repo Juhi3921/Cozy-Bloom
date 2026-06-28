@@ -7,11 +7,6 @@ A tiny browser garden game you can play with just your spacebar.
 You grow flowers. That's basically it.
 
 Press space to plant, double-tap to switch tools, hold to water everything at once.
-There's a day-night cycle, weather, critters that show up when you have blooming flowers,
-and a little journal that tracks what you've discovered.
-
-I spent most of the time on the spacebar timing logic — getting tap vs double-tap vs hold
-vs triple-tap to feel natural took longer than I expected. The SVG flowers took a while too.
 
 ## Controls
 
@@ -25,20 +20,6 @@ Everything is the spacebar.
 | Triple-tap | Open / close the garden journal |
 
 There's an interactive tutorial on first launch that walks through each control step by step.
-
-## Tools
-
-- **Plant** — place a flower seed in the highlighted plot (costs coins)
-- **Water** — keep flowers hydrated, they'll wilt without it
-- **Harvest** — collect fully bloomed flowers for coins
-- **Decorate** — place benches, ponds, and lanterns around the garden
-
-## Running locally
-
-```bash
-npm install
-npm run dev
-```
 
 ## Stack
 

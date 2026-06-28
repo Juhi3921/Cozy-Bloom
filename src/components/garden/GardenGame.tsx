@@ -768,7 +768,6 @@ export function GardenGame() {
             style={{ background: "#f5f0e6" }}
           >
             <div className="text-center max-w-md px-6" style={{ color: "#2d2a22" }}>
-              <div className="text-sm uppercase tracking-widest opacity-40 mb-2">Hack Club · OneKey Challenge</div>
               <h1 className="text-4xl font-bold mb-3" style={{ color: "#2d4a35" }}>
                 Cozy Bloom
               </h1>

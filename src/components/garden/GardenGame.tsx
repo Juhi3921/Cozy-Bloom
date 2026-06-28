@@ -30,6 +30,42 @@ const COLS = 6;
 const ROWS = 4;
 const TOTAL_PLOTS = COLS * ROWS;
 
+// Tutorial steps — null means tutorial is done
+const TUTORIAL_STEPS = [
+  {
+    title: "Welcome to Cozy Bloom",
+    body: "This is your garden. You only have one key: the spacebar. That's it.",
+    hint: "Press SPACE to continue",
+  },
+  {
+    title: "Moving the cursor",
+    body: "Tap SPACE to move your cursor one plot forward across the garden grid.",
+    hint: "Press SPACE to continue",
+  },
+  {
+    title: "Planting",
+    body: "When your cursor is on an empty plot, tap SPACE to plant the selected flower. Flowers cost coins.",
+    hint: "Press SPACE to continue",
+  },
+  {
+    title: "Switching tools",
+    body: "Double-tap SPACE to cycle between tools: Plant → Water → Harvest → Decorate.",
+    hint: "Press SPACE to continue",
+  },
+  {
+    title: "Watering & Harvesting",
+    body: "Water your flowers or they'll wilt. When a flower fully blooms, switch to Harvest and tap to collect coins. Hold SPACE to water everything at once.",
+    hint: "Press SPACE to continue",
+  },
+  {
+    title: "That's all!",
+    body: "Triple-tap SPACE at any time to open your garden journal. Enjoy the garden.",
+    hint: "Press SPACE to start gardening",
+  },
+];
+
+const TUTORIAL_DONE_KEY = "cozy-bloom-tutorial-done";
+
 export function GardenGame() {
   const [save, setSave] = useState<Save>(() => loadGameSave());
   const [tool, setTool] = useState<"plant" | "water" | "decorate" | "harvest">("plant");
@@ -41,6 +77,10 @@ export function GardenGame() {
   const [holdProgress, setHoldProgress] = useState(0);
   const [critters, setCritters] = useState<Critter[]>([]);
   const [toasts, setToasts] = useState<{ id: string; msg: string }[]>([]);
+  // null = tutorial done/skipped, 0-5 = active step
+  const [tutorialStep, setTutorialStep] = useState<number | null>(() =>
+    localStorage.getItem(TUTORIAL_DONE_KEY) ? null : 0
+  );
 
   const tapTimer = useRef<number | null>(null);
   const tapCount = useRef(0);
@@ -352,6 +392,18 @@ export function GardenGame() {
     }
   }, [tool, cycleFlower, pushToast, playChime]);
 
+  // Advance tutorial on space press
+  const advanceTutorial = useCallback(() => {
+    setTutorialStep((step) => {
+      if (step === null) return null;
+      if (step >= TUTORIAL_STEPS.length - 1) {
+        localStorage.setItem(TUTORIAL_DONE_KEY, "1");
+        return null; // done
+      }
+      return step + 1;
+    });
+  }, []);
+
   // Keyboard Space listener
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -360,6 +412,12 @@ export function GardenGame() {
 
       if (splash) {
         setSplash(false);
+        return;
+      }
+
+      // Tutorial intercepts all keypresses
+      if (tutorialStep !== null) {
+        advanceTutorial();
         return;
       }
 
@@ -381,6 +439,8 @@ export function GardenGame() {
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
       e.preventDefault();
+
+      if (tutorialStep !== null) return; // tutorial handles its own flow
 
       if (!holding.current) return;
       holding.current = false;
@@ -424,7 +484,7 @@ export function GardenGame() {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
     };
-  }, [splash, performTap, advanceCursor, cycleTool, handleHoldComplete]);
+  }, [splash, tutorialStep, advanceTutorial, performTap, advanceCursor, cycleTool, handleHoldComplete]);
 
   // Sky backdrop colors
   const skyBackground = useMemo(() => {
@@ -548,61 +608,60 @@ export function GardenGame() {
       {/* Top HUD */}
       <div className="absolute top-4 left-4 right-4 flex justify-between items-start gap-3 pointer-events-none">
         <div className="glass-panel rounded-2xl px-4 py-3 pointer-events-auto">
-          <div className="text-xs uppercase tracking-wider opacity-70">OneKey Garden</div>
+          <div className="text-[10px] uppercase tracking-wider opacity-60">Cozy Bloom</div>
           <div className="font-semibold flex items-center gap-3 text-base">
-            <span>🌼 Day {save.day}</span>
-            <span className="opacity-70">·</span>
+            <span>Day {save.day}</span>
+            <span className="opacity-40">·</span>
             <span>{timeLabel}</span>
-            <span className="opacity-70">·</span>
-            <span className="capitalize">{save.weather === "rain" ? "🌧️ Rain" : "☀️ Clear"}</span>
+            <span className="opacity-40">·</span>
+            <span className="capitalize">{save.weather === "rain" ? "Rain" : "Clear"}</span>
           </div>
         </div>
         <div className="glass-panel rounded-2xl px-4 py-3 pointer-events-auto">
-          <span className="font-bold text-lg">🪙 {save.coins}</span>
+          <span className="font-bold text-lg">{save.coins} coins</span>
         </div>
       </div>
 
       {/* Bottom HUD */}
       <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end gap-3 pointer-events-none">
         <div className="glass-panel rounded-2xl px-5 py-4 pointer-events-auto flex items-center gap-4 max-w-[70%]">
-          <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-white/80 to-white/40 flex items-center justify-center text-2xl shadow-inner">
-            {tool === "plant" ? "🌱" : tool === "water" ? "💧" : tool === "harvest" ? "✂️" : "🏮"}
+          <div className="w-10 h-10 rounded-xl border border-white/30 bg-white/20 flex items-center justify-center text-sm font-bold uppercase tracking-wide">
+            {tool[0].toUpperCase()}
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-widest opacity-60">Tool</div>
+            <div className="text-[10px] uppercase tracking-widest opacity-60">Active tool</div>
             <div className="font-semibold capitalize text-lg">{tool}</div>
             {tool === "plant" && (
-              <div className="text-xs opacity-80 mt-0.5">
-                {FLOWER_INFO[flowerSel].emoji} {FLOWER_INFO[flowerSel].name} · 🪙 {FLOWER_INFO[flowerSel].cost}
-                <span className="opacity-60"> · hold SPACE to switch</span>
+              <div className="text-xs opacity-70 mt-0.5">
+                {FLOWER_INFO[flowerSel].name} · {FLOWER_INFO[flowerSel].cost} coins · hold SPACE to switch flower
               </div>
             )}
             {tool === "decorate" && (
-              <div className="text-xs opacity-80 mt-0.5">
-                {DECOR_INFO[decorSel].emoji} {DECOR_INFO[decorSel].name} · 🪙 {DECOR_INFO[decorSel].cost}
+              <div className="text-xs opacity-70 mt-0.5">
+                {DECOR_INFO[decorSel].name} · {DECOR_INFO[decorSel].cost} coins
               </div>
             )}
-            {tool === "water" && <div className="text-xs opacity-80 mt-0.5">Hold SPACE to water all</div>}
-            {tool === "harvest" && <div className="text-xs opacity-80 mt-0.5">Click to harvest ready flowers</div>}
+            {tool === "water" && <div className="text-xs opacity-70 mt-0.5">Hold SPACE to water all</div>}
+            {tool === "harvest" && <div className="text-xs opacity-70 mt-0.5">Tap on a bloomed flower to harvest</div>}
           </div>
         </div>
 
         <div className="glass-panel rounded-2xl px-4 py-3 pointer-events-auto text-xs space-y-1 max-w-xs">
-          <div className="font-semibold text-sm mb-1">One-Key Controls </div>
+          <div className="font-semibold text-sm mb-1">Controls</div>
           <div className="flex justify-between gap-3 text-xs">
-            <span className="font-semibold opacity-80">Tap</span>
-            <span className="opacity-70">use tool & move</span>
+            <span className="font-mono font-semibold opacity-80">Tap</span>
+            <span className="opacity-70">use tool, move forward</span>
           </div>
           <div className="flex justify-between gap-3 text-xs">
-            <span className="font-semibold opacity-80">Double-tap</span>
+            <span className="font-mono font-semibold opacity-80">×2 Tap</span>
             <span className="opacity-70">switch tool</span>
           </div>
           <div className="flex justify-between gap-3 text-xs">
-            <span className="font-semibold opacity-80">Hold</span>
+            <span className="font-mono font-semibold opacity-80">Hold</span>
             <span className="opacity-70">{tool === "water" ? "water all" : "next flower"}</span>
           </div>
           <div className="flex justify-between gap-3 text-xs">
-            <span className="font-semibold opacity-80">Triple-tap</span>
+            <span className="font-mono font-semibold opacity-80">×3 Tap</span>
             <span className="opacity-70">open journal</span>
           </div>
         </div>
@@ -617,11 +676,11 @@ export function GardenGame() {
             exit={{ opacity: 0 }}
             className="absolute left-1/2 -translate-x-1/2 bottom-32 glass-panel rounded-full px-5 py-2"
           >
-            <div className="text-xs mb-1 text-center font-medium">Charging…</div>
+            <div className="text-xs mb-1 text-center font-medium opacity-70">Charging…</div>
             <div className="w-32 h-1.5 rounded-full bg-black/10 overflow-hidden">
               <div
-                className="h-full bg-linear-to-r from-pink-400 to-purple-500"
-                style={{ width: `${holdProgress * 100}%` }}
+                className="h-full bg-amber-500"
+                style={{ width: `${holdProgress * 100}%`, transition: "width 30ms linear" }}
               />
             </div>
           </motion.div>
@@ -650,6 +709,54 @@ export function GardenGame() {
         {menuOpen && <GardenJournal save={save} onClose={() => setMenuOpen(false)} />}
       </AnimatePresence>
 
+      {/* Tutorial Overlay */}
+      <AnimatePresence>
+        {tutorialStep !== null && !splash && (
+          <motion.div
+            key={tutorialStep}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 z-40 flex items-center justify-center"
+            style={{ background: "rgba(0,0,0,0.35)" }}
+          >
+            <div
+              className="glass-panel rounded-2xl px-8 py-7 max-w-sm w-full mx-6 text-center"
+              style={{ background: "rgba(245, 240, 230, 0.92)", color: "#2d2a22" }}
+            >
+              <div className="text-[10px] uppercase tracking-widest opacity-50 mb-2">
+                Step {tutorialStep + 1} of {TUTORIAL_STEPS.length}
+              </div>
+              <h2 className="text-xl font-bold mb-3">
+                {TUTORIAL_STEPS[tutorialStep].title}
+              </h2>
+              <p className="text-sm leading-relaxed opacity-80 mb-6">
+                {TUTORIAL_STEPS[tutorialStep].body}
+              </p>
+              <div className="flex items-center justify-between gap-4">
+                <button
+                  onClick={() => {
+                    localStorage.setItem(TUTORIAL_DONE_KEY, "1");
+                    setTutorialStep(null);
+                  }}
+                  className="text-xs opacity-50 hover:opacity-80 underline cursor-pointer"
+                >
+                  Skip tutorial
+                </button>
+                <button
+                  onClick={advanceTutorial}
+                  className="rounded-lg px-5 py-2 text-sm font-semibold cursor-pointer"
+                  style={{ background: "#4a7c59", color: "#fff" }}
+                >
+                  {TUTORIAL_STEPS[tutorialStep].hint}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Splash screen */}
       <AnimatePresence>
         {splash && (
@@ -657,41 +764,45 @@ export function GardenGame() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex items-center justify-center bg-linear-to-br from-pink-100 via-purple-100 to-sky-100"
+            className="absolute inset-0 z-50 flex items-center justify-center"
+            style={{ background: "#f5f0e6" }}
           >
-            <div className="text-center max-w-md px-6">
-              <h1 className="text-4xl font-bold mb-2 bg-linear-to-br from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                OneKey Garden
+            <div className="text-center max-w-md px-6" style={{ color: "#2d2a22" }}>
+              <div className="text-sm uppercase tracking-widest opacity-40 mb-2">Hack Club · OneKey Challenge</div>
+              <h1 className="text-4xl font-bold mb-3" style={{ color: "#2d4a35" }}>
+                Cozy Bloom
               </h1>
-              <p className="opacity-80 mb-6 text-sm">A cozy spacebar gardening .</p>
-              <div className="glass-panel rounded-2xl p-4 text-xs text-left mx-auto inline-block space-y-1">
-                <div className="font-semibold mb-1">🎹 spacebar only controls:</div>
+              <p className="opacity-60 mb-8 text-sm">A garden game controlled entirely with the spacebar.</p>
+              <div
+                className="rounded-xl p-5 text-xs text-left mx-auto inline-block space-y-2 mb-8"
+                style={{ background: "rgba(0,0,0,0.06)", minWidth: "240px" }}
+              >
+                <div className="font-semibold mb-2 opacity-70 uppercase text-[10px] tracking-widest">Spacebar controls</div>
                 <div className="flex justify-between gap-4">
-                  <span className="font-semibold">Tap</span>
-                  <span>plant / water / harvest</span>
+                  <span className="font-mono font-semibold">Tap</span>
+                  <span className="opacity-60">plant / water / harvest</span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="font-semibold">Double-tap</span>
-                  <span>cycle tool</span>
+                  <span className="font-mono font-semibold">×2 Tap</span>
+                  <span className="opacity-60">cycle tool</span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="font-semibold">Hold</span>
-                  <span>water all / next flower</span>
+                  <span className="font-mono font-semibold">Hold</span>
+                  <span className="opacity-60">water all / next flower</span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="font-semibold">Triple-tap</span>
-                  <span>view journal collection</span>
+                  <span className="font-mono font-semibold">×3 Tap</span>
+                  <span className="opacity-60">open journal</span>
                 </div>
               </div>
               <br />
-              <motion.button
-                animate={{ scale: [1, 1.03, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+              <button
                 onClick={() => setSplash(false)}
-                className="mt-6 rounded-full bg-linear-to-r from-pink-500 to-purple-500 text-white font-bold px-6 py-2.5 shadow-md cursor-pointer"
+                className="rounded-lg px-8 py-3 font-semibold text-sm cursor-pointer"
+                style={{ background: "#4a7c59", color: "#fff" }}
               >
-                Press SPACE to Start
-              </motion.button>
+                Press SPACE to start
+              </button>
             </div>
           </motion.div>
         )}

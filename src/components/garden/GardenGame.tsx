@@ -588,7 +588,7 @@ export function GardenGame() {
         </div>
 
         <div className="glass-panel rounded-2xl px-4 py-3 pointer-events-auto text-xs space-y-1 max-w-xs">
-          <div className="font-semibold text-sm mb-1">🎹 Controls</div>
+          <div className="font-semibold text-sm mb-1">One-Key Controls </div>
           <div className="flex justify-between gap-3 text-xs">
             <span className="font-semibold opacity-80">Tap</span>
             <span className="opacity-70">use tool & move</span>

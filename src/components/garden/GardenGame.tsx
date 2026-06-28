@@ -34,7 +34,7 @@ const TOTAL_PLOTS = COLS * ROWS;
 const TUTORIAL_STEPS = [
   {
     title: "Welcome to Cozy Bloom",
-    body: "This is your garden. You only have one key: the spacebar. That's it.",
+    body: "This is your garden. You only have one key: the spacebar",
     hint: "Press SPACE to continue",
   },
   {
@@ -59,7 +59,7 @@ const TUTORIAL_STEPS = [
   },
   {
     title: "That's all!",
-    body: "Triple-tap SPACE at any time to open your garden journal. Enjoy the garden.",
+    body: "Triple-tap SPACE at any time to open your garden journal.",
     hint: "Press SPACE to start gardening",
   },
 ];
@@ -124,7 +124,6 @@ export function GardenGame() {
     }
   }, []);
 
-  // Save game state helper
   useEffect(() => {
     const timer = setTimeout(() => {
       localStorage.setItem(SAVE_KEY, JSON.stringify(save));
@@ -132,7 +131,6 @@ export function GardenGame() {
     return () => clearTimeout(timer);
   }, [save]);
 
-  // Game Loop: Handles Time progress, Weather state, and Plant Growth
   useEffect(() => {
     const interval = setInterval(() => {
       setSave((prev) => {
@@ -223,7 +221,6 @@ export function GardenGame() {
       });
     }, 3000);
 
-    // Critters hovering/flight movement
     const movementTimer = setInterval(() => {
       setCritters((prev) =>
         prev.map((c) => {
@@ -404,7 +401,6 @@ export function GardenGame() {
     });
   }, []);
 
-  // Keyboard Space listener
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;

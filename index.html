@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Bloom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container" class="relative">
+    <!-- Sky & Celestial elements -->
+    <div id="sky-backdrop"></div>
+    <div id="celestial-body"></div>
+    <div id="stars-container"></div>
+    <div id="hills-container"></div>
+    <div id="weather-layer"></div>
+    <div id="critters-layer"></div>
+
+    <!-- Top HUD -->
+    <div class="hud-top">
+      <div class="glass-panel text-left">
+        <div class="hud-label">Cozy Bloom</div>
+        <div class="hud-values">
+          <span id="day-counter">Day 1</span>
+          <span class="dot-separator">·</span>
+          <span id="time-counter">06:00</span>
+          <span class="dot-separator">·</span>
+          <span id="weather-counter">Clear</span>
+        </div>
+      </div>
+      <div class="glass-panel text-right">
+        <span id="coin-counter" class="coin-count">50 coins</span>
+      </div>
+    </div>
+
+    <!-- Garden Grid Area -->
+    <div id="ground-layer">
+      <div id="garden-grid"></div>
+    </div>
+
+    <!-- Bottom HUD -->
+    <div class="hud-bottom">
+      <div class="glass-panel active-tool-panel">
+        <div id="tool-badge" class="badge">P</div>
+        <div class="tool-text">
+          <div class="hud-label">Active Tool</div>
+          <div id="tool-name" class="tool-name">Plant</div>
+          <div id="tool-desc" class="tool-desc">Daisy · 3 coins · hold SPACE to switch flower</div>
+        </div>
+      </div>
+
+      <div class="glass-panel controls-panel">
+        <div class="panel-title">Controls</div>
+        <div class="control-row"><span class="key">Tap</span> <span class="desc">use tool, move cursor</span></div>
+        <div class="control-row"><span class="key">×2 Tap</span> <span class="desc">switch tool</span></div>
+        <div class="control-row"><span class="key">Hold</span> <span class="desc">water all / next flower</span></div>
+        <div class="control-row"><span class="key">×3 Tap</span> <span class="desc">open journal</span></div>
+      </div>
+    </div>
+
+    <!-- Charge Indicator -->
+    <div id="charge-bar-container" class="glass-panel hidden">
+      <div class="charge-label">Charging…</div>
+      <div class="progress-track">
+        <div id="charge-progress" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Splash Screen Modal -->
+    <div id="splash-screen" class="overlay">
+      <div class="splash-card">
+        <div class="challenge-tag">Hack Club · OneKey Challenge</div>
+        <h1 class="game-title">Cozy Bloom</h1>
+        <p class="game-subtitle">A garden game controlled entirely with the spacebar.</p>
+        
+        <div class="controls-guide">
+          <div class="guide-title">Spacebar Controls</div>
+          <div class="guide-row"><span class="guide-key">Tap</span><span class="guide-desc">plant / water / harvest</span></div>
+          <div class="guide-row"><span class="guide-key">×2 Tap</span><span class="guide-desc">cycle tool</span></div>
+          <div class="guide-row"><span class="guide-key">Hold</span><span class="guide-desc">water all / next flower</span></div>
+          <div class="guide-row"><span class="guide-key">×3 Tap</span><span class="guide-desc">open journal</span></div>
+        </div>
+
+        <button id="start-button" class="btn">Press SPACE to start</button>
+      </div>
+    </div>
+
+    <!-- Tutorial Step Overlay -->
+    <div id="tutorial-overlay" class="overlay hidden">
+      <div class="tutorial-card">
+        <div id="tutorial-step-tag" class="step-tag">Step 1 of 6</div>
+        <h2 id="tutorial-title" class="tutorial-title">Welcome to Cozy Bloom</h2>
+        <p id="tutorial-body" class="tutorial-body">This is your garden. You only have one key: the spacebar. That's it.</p>
+        <div class="tutorial-actions">
+          <button id="skip-tutorial" class="btn-text">Skip tutorial</button>
+          <button id="next-tutorial" class="btn-primary">Press SPACE to continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Journal Overlay -->
+    <div id="journal-overlay" class="overlay hidden">
+      <div class="journal-card">
+        <div class="journal-header">
+          <h2 class="journal-title">Garden Journal</h2>
+          <button id="close-journal" class="btn-text">Close</button>
+        </div>
+        
+        <div class="journal-section">
+          <h3 class="section-title">Flowers Discovered</h3>
+          <div id="journal-flowers" class="discovery-grid"></div>
+        </div>
+
+        <div class="journal-section">
+          <h3 class="section-title">Wildlife Spotted</h3>
+          <div id="journal-wildlife" class="discovery-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
